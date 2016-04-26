@@ -1,0 +1,38 @@
+% Test Vis Stim 
+clc;
+Screen('CloseAll');
+AssertOpenGL;
+        Screen('Preference','SkipSyncTests',1);
+% w     = Screen('OpenWindow',max (Screen('Screens')), [127 127 127]);
+w     = Screen('OpenWindow',2, [0 0 0], [-1920 0 0 1080]);
+
+%%
+G     = mpaInitializeGabors(w);
+Screen('PreloadTextures', w, G)
+
+%%
+commandwindow;
+S.Vis       = fopen('mpaPtbComm.txt', 'a+' );
+              fprintf('***\nPTB is Listening\n***\n')
+
+
+while 1
+
+    switch fread(S.Vis,1,'char=>char')
+        
+        case 'f'
+            Screen('DrawTexture',   w, G(randi(length(G))))
+            Screen('Flip',          w);
+            fprintf('flipping\n\n')            
+        case 'x'
+            break;
+            
+    end
+            
+    
+end
+
+%%
+fclose(S.Vis);
+sca;
+exit;
